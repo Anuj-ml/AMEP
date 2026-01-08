@@ -73,7 +73,7 @@ const Engagement: React.FC<EngagementProps> = ({ userRole }) => {
           <button 
             onClick={handleAnalysis}
             disabled={isAnalyzing || !sessionNotes}
-            className="mt-8 flex items-center justify-center gap-3 w-full py-4 bg-indigo-600 text-white rounded-3xl font-black shadow-2xl shadow-indigo-200 hover:bg-indigo-700 hover:-translate-y-1 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:translate-y-0"
+            className="mt-8 flex items-center justify-center gap-3 w-full py-4 bg-indigo-600 text-white rounded-3xl font-black shadow-2xl shadow-indigo-200 hover:bg-indigo-700 transition-all disabled:opacity-70 disabled:cursor-not-allowed disabled:translate-y-0"
           >
             {isAnalyzing ? (
               <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
@@ -115,7 +115,7 @@ const Engagement: React.FC<EngagementProps> = ({ userRole }) => {
         </div>
 
         {/* AI Analysis Result */}
-        <div className={`transition-all duration-700 ${analysis ? 'opacity-100 scale-100' : 'opacity-40 blur-[4px] scale-95'}`}>
+        <div className={`transition-all duration-700 ${analysis ? 'opacity-100 scale-100' : 'opacity-100 scale-95'}`}>
           <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 p-8 rounded-[2.5rem] text-white shadow-2xl space-y-8 relative overflow-hidden">
             <div className="relative z-10 flex justify-between items-center">
               <h3 className="font-black text-xl flex items-center gap-2">

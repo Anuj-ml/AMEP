@@ -258,13 +258,15 @@ const PBLManager: React.FC<PBLManagerProps> = ({ userRole }) => {
   const [activeTab, setActiveTab] = useState<'all' | 'planning' | 'active'>('active');
   const [showWorkspace, setShowWorkspace] = useState(false);
   const [workspaceTool, setWorkspaceTool] = useState<'doc' | 'board' | 'layout'>('doc');
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [rightPanelOpen, setRightPanelOpen] = useState(true);
   const isTeacher = userRole === UserRole.TEACHER;
 
   if (showWorkspace) {
     return (
-      <div className="fixed inset-0 bg-slate-950 z-[100] flex flex-col animate-in fade-in zoom-in-95 duration-500 overflow-hidden font-inter">
-        <header className="h-20 border-b border-slate-800/50 flex justify-between items-center px-6 bg-slate-950/80 backdrop-blur-2xl shrink-0">
-          <div className="flex items-center gap-6">
+      <div className="flex flex-col h-[calc(100vh-5rem)] bg-slate-950 animate-in fade-in zoom-in-95 duration-500 overflow-hidden font-inter rounded-[2rem]">
+        <header className="h-16 border-b border-slate-800/50 flex justify-between items-center px-6 bg-slate-950/80 backdrop-blur-2xl shrink-0">
+          <div className="flex items-center gap-4">
             <button 
               onClick={() => setShowWorkspace(false)} 
               className="p-3 bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 rounded-2xl transition-all active:scale-90 border border-white/5"
@@ -293,6 +295,13 @@ const PBLManager: React.FC<PBLManagerProps> = ({ userRole }) => {
                 ))}
              </div>
              <div className="h-8 w-px bg-slate-800 mx-2"></div>
+             <button 
+               onClick={() => setRightPanelOpen(!rightPanelOpen)}
+               className="hidden xl:flex p-3 bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 rounded-2xl transition-all active:scale-90 border border-white/5"
+               title={rightPanelOpen ? 'Hide Panel' : 'Show Panel'}
+             >
+               <ChevronRight size={20} className={`transition-transform duration-300 ${rightPanelOpen ? '' : 'rotate-180'}`} />
+             </button>
              <button className="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl text-xs font-black shadow-[0_10px_30px_rgba(79,70,229,0.3)] active:scale-95 transition-all border border-indigo-400/20">
                Share Lab
              </button>
@@ -368,7 +377,7 @@ const PBLManager: React.FC<PBLManagerProps> = ({ userRole }) => {
               )}
             </div>
             
-            <aside className="hidden xl:flex w-80 flex-col gap-8 shrink-0">
+            <aside className={`hidden xl:flex ${rightPanelOpen ? 'w-80' : 'w-0'} flex-col gap-8 shrink-0 transition-all duration-300 overflow-hidden`}>
               <div className="bg-slate-900/50 backdrop-blur-xl border border-white/5 p-8 rounded-[2.5rem] space-y-8 shadow-2xl">
                  <h4 className="text-white font-black flex items-center justify-between text-[10px] uppercase tracking-[0.3em]">
                    Live Feed <Maximize2 size={14} className="text-slate-700" />
