@@ -1,0 +1,7 @@
+{
+  "name": "AMEP - Adaptive Mastery & Engagement Platform",
+  "description": "A comprehensive, data-driven EdTech platform that converts classroom inputs into actionable feedback through PBL management, real-time engagement tracking, and an adaptive mastery-driven homework system.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
