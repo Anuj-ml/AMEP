@@ -10,9 +10,10 @@ import {
   ResponsiveContainer,
   Cell
 } from 'recharts';
-import { Sparkles, MessageSquare, Radio, Info, TrendingUp, Lightbulb } from 'lucide-react';
+import { Sparkles, MessageSquare, Radio, Info, TrendingUp, Lightbulb, ChevronRight, Activity } from 'lucide-react';
 import { geminiService } from '../services/geminiService';
 import { UserRole } from '../types';
+import { MOCK_STUDENTS } from '../constants';
 
 interface EngagementProps {
   userRole: UserRole;
@@ -23,13 +24,17 @@ const Engagement: React.FC<EngagementProps> = ({ userRole }) => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysis, setAnalysis] = useState<{index: number, takeaways: string[], sentiment: string} | null>(null);
 
-  // Fix: Removed reference to non-existent UserRole.ADMIN
-  
   const pollData = [
     { name: 'Understood', count: 18, color: '#10b981' },
     { name: 'Confused', count: 5, color: '#f59e0b' },
     { name: 'Need Example', count: 9, color: '#6366f1' },
   ];
+
+  const studentEngagementData = MOCK_STUDENTS.map(s => ({
+    name: s.name.split(' ')[0],
+    index: s.engagementIndex,
+    full: s.name
+  }));
 
   const handleAnalysis = async () => {
     if (!sessionNotes.trim()) return;
@@ -73,7 +78,7 @@ const Engagement: React.FC<EngagementProps> = ({ userRole }) => {
           <button 
             onClick={handleAnalysis}
             disabled={isAnalyzing || !sessionNotes}
-            className="mt-8 flex items-center justify-center gap-3 w-full py-4 bg-indigo-600 text-white rounded-3xl font-black shadow-2xl shadow-indigo-200 hover:bg-indigo-700 transition-all disabled:opacity-70 disabled:cursor-not-allowed disabled:translate-y-0"
+            className="mt-8 flex items-center justify-center gap-3 w-full py-4 bg-indigo-600 text-white rounded-3xl font-black shadow-2xl shadow-indigo-200 hover:bg-indigo-700 hover:-translate-y-1 transition-all disabled:cursor-not-allowed disabled:translate-y-0 opacity-100"
           >
             {isAnalyzing ? (
               <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
@@ -87,6 +92,37 @@ const Engagement: React.FC<EngagementProps> = ({ userRole }) => {
 
       {/* Visual Feedback Section */}
       <div className="space-y-6 lg:space-y-8">
+        
+        {/* Student Engagement Index Chart */}
+        <div className="bg-white p-6 lg:p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
+          <div className="flex justify-between items-center mb-8">
+            <div>
+              <h3 className="font-black text-slate-800 text-lg">Student Engagement Index</h3>
+              <p className="text-xs text-slate-400 font-bold">Live Cohort Tracking</p>
+            </div>
+            <div className="p-3 bg-slate-50 rounded-2xl">
+              <Activity size={20} className="text-emerald-500" />
+            </div>
+          </div>
+          <div className="h-48 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={studentEngagementData}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 10, fontWeight: 700}} />
+                <Tooltip 
+                  cursor={{fill: 'rgba(241, 245, 249, 0.5)'}} 
+                  contentStyle={{borderRadius: '16px', border: 'none', fontWeight: 'bold', fontSize: '12px'}} 
+                />
+                <Bar dataKey="index" radius={[8, 8, 8, 8]} barSize={24}>
+                  {studentEngagementData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.index > 70 ? '#10b981' : entry.index > 50 ? '#f59e0b' : '#ef4444'} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
         {/* Instant Poll Result */}
         <div className="bg-white p-6 lg:p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
           <div className="flex justify-between items-center mb-8">
@@ -115,24 +151,22 @@ const Engagement: React.FC<EngagementProps> = ({ userRole }) => {
         </div>
 
         {/* AI Analysis Result */}
-        <div className={`transition-all duration-700 ${analysis ? 'opacity-100 scale-100' : 'opacity-100 scale-95'}`}>
-          <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 p-8 rounded-[2.5rem] text-white shadow-2xl space-y-8 relative overflow-hidden">
+        <div className="transition-all duration-700 opacity-100 scale-100">
+          <div className="bg-gradient-to-br from-indigo-700 to-indigo-900 p-8 rounded-[2.5rem] text-white shadow-2xl space-y-8 relative overflow-hidden ring-1 ring-white/10">
             <div className="relative z-10 flex justify-between items-center">
               <h3 className="font-black text-xl flex items-center gap-2">
                 <Lightbulb size={24} className="text-amber-400" />
                 Strategic Insight
               </h3>
-              {analysis && (
-                <div className="bg-white/20 backdrop-blur-md px-5 py-2 rounded-2xl text-2xl font-black border border-white/20">
-                  {analysis.index}/100
-                </div>
-              )}
+              <div className="bg-white/10 px-5 py-2 rounded-2xl text-2xl font-black border border-white/20">
+                {analysis ? analysis.index : '0'}/100
+              </div>
             </div>
 
-            {analysis ? (
-              <div className="relative z-10 space-y-6">
-                <div className="space-y-4">
-                  <p className="text-[10px] font-black text-indigo-300 uppercase tracking-[0.2em]">Action Plan</p>
+            <div className="relative z-10 space-y-6">
+              <div className="space-y-4">
+                <p className="text-[10px] font-black text-indigo-300 uppercase tracking-[0.2em]">Action Plan</p>
+                {analysis ? (
                   <ul className="space-y-4">
                     {analysis.takeaways.map((t, i) => (
                       <li key={i} className="flex gap-4 p-4 bg-white/5 rounded-2xl border border-white/10 text-sm font-semibold leading-relaxed">
@@ -141,20 +175,19 @@ const Engagement: React.FC<EngagementProps> = ({ userRole }) => {
                       </li>
                     ))}
                   </ul>
-                </div>
-                <div className="p-5 bg-black/20 rounded-2xl border border-white/5">
-                  <p className="text-[10px] font-black text-indigo-300 uppercase tracking-widest mb-2">Classroom Atmosphere</p>
-                  <p className="text-sm font-bold text-white italic">"{analysis.sentiment}"</p>
-                </div>
+                ) : (
+                  <div className="p-8 border-2 border-dashed border-white/20 rounded-2xl text-center text-indigo-100 font-bold bg-white/5 opacity-100">
+                    No active strategic takeaways. Generate insights to see the action plan.
+                  </div>
+                )}
               </div>
-            ) : (
-              <div className="py-20 flex flex-col items-center justify-center text-indigo-300/40">
-                <MessageSquare size={48} className="mb-4 opacity-20" />
-                <p className="font-bold text-lg">Analysis Required</p>
+              <div className="p-5 bg-black/30 rounded-2xl border border-white/10 opacity-100">
+                <p className="text-[10px] font-black text-indigo-300 uppercase tracking-widest mb-2">Classroom Atmosphere</p>
+                <p className="text-sm font-bold text-white italic">
+                  {analysis ? `"${analysis.sentiment}"` : "Awaiting data for sentiment synthesis..."}
+                </p>
               </div>
-            )}
-            {/* Design accents */}
-            <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full blur-3xl"></div>
+            </div>
           </div>
         </div>
       </div>

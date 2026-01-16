@@ -9,7 +9,10 @@ import MasterySystem from './pages/MasterySystem';
 import TaskManagement from './pages/TaskManagement';
 import LibraryPage from './pages/LibraryPage';
 import CommunityPage from './pages/CommunityPage';
+import ProfilePage from './pages/ProfilePage';
 import Login from './pages/Login';
+import ARLab from './pages/ARLab';
+import AdaptivePractice from './pages/AdaptivePractice';
 import { UserRole } from './types';
 
 const App: React.FC = () => {
@@ -50,6 +53,9 @@ const App: React.FC = () => {
           <Route path="/library" element={<LibraryPage />} />
           <Route path="/community" element={<CommunityPage />} />
           <Route path="/tasks" element={<TaskManagement userRole={userRole} />} />
+          <Route path="/profile" element={<ProfilePage userRole={userRole} />} />
+          <Route path="/ar-lab" element={<ARLab />} />
+          <Route path="/practice" element={<AdaptivePractice />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Layout>

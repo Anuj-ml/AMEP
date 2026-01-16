@@ -1,5 +1,6 @@
+
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   Target, 
@@ -16,7 +17,10 @@ import {
   Users2,
   Sword,
   Map,
-  ClipboardList
+  ClipboardList,
+  User as UserIcon,
+  Scan,
+  Zap
 } from 'lucide-react';
 import { UserRole } from '../types';
 
@@ -30,6 +34,7 @@ const Layout: React.FC<LayoutProps> = ({ children, userRole, onLogout }) => {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const getNavItems = (role: UserRole) => {
     switch (role) {
@@ -38,9 +43,12 @@ const Layout: React.FC<LayoutProps> = ({ children, userRole, onLogout }) => {
           { name: 'My Quest', icon: <Sword size={20} />, path: '/', roles: [UserRole.STUDENT] },
           { name: 'Team Lab', icon: <Briefcase size={20} />, path: '/pbl', roles: [UserRole.STUDENT] },
           { name: 'Mastery Map', icon: <Map size={20} />, path: '/mastery', roles: [UserRole.STUDENT] },
+          { name: 'Adaptive Dojo', icon: <Zap size={20} />, path: '/practice', roles: [UserRole.STUDENT] },
+          { name: 'AR Socratic', icon: <Scan size={20} />, path: '/ar-lab', roles: [UserRole.STUDENT] },
           { name: 'AI Scribe', icon: <Library size={20} />, path: '/library', roles: [UserRole.STUDENT] },
           { name: 'Guild Hub', icon: <Users2 size={20} />, path: '/community', roles: [UserRole.STUDENT] },
           { name: 'Missions', icon: <CheckSquare size={20} />, path: '/tasks', roles: [UserRole.STUDENT] },
+          { name: 'Profile', icon: <UserIcon size={20} />, path: '/profile', roles: [UserRole.STUDENT] },
         ];
       case UserRole.TEACHER:
         return [
@@ -50,6 +58,7 @@ const Layout: React.FC<LayoutProps> = ({ children, userRole, onLogout }) => {
           { name: 'Competency', icon: <Target size={20} />, path: '/mastery', roles: [UserRole.TEACHER] },
           { name: 'Curriculum AI', icon: <Library size={20} />, path: '/library', roles: [UserRole.TEACHER] },
           { name: 'Workflow', icon: <ClipboardList size={20} />, path: '/tasks', roles: [UserRole.TEACHER] },
+          { name: 'Profile', icon: <UserIcon size={20} />, path: '/profile', roles: [UserRole.TEACHER] },
         ];
       default:
         return [];
@@ -120,20 +129,24 @@ const Layout: React.FC<LayoutProps> = ({ children, userRole, onLogout }) => {
         <NavigationLinks />
 
         <div className="p-4 mt-auto">
-          <div className={`p-4 bg-slate-800/50 rounded-2xl border border-slate-700/50 flex items-center gap-3 ${!isSidebarOpen && 'justify-center'}`}>
-            <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${userRole}`} alt="" className="w-9 h-9 rounded-xl border-2 border-slate-700" />
+          <div 
+            onClick={() => navigate('/profile')}
+            className={`p-4 bg-slate-800/50 rounded-2xl border border-slate-700/50 flex items-center gap-3 ${!isSidebarOpen && 'justify-center'} cursor-pointer hover:bg-slate-800 transition-colors group`}
+          >
+            <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${userRole}`} alt="" className="w-9 h-9 rounded-xl border-2 border-slate-700 group-hover:border-indigo-500 transition-colors" />
             {isSidebarOpen && (
-              <div className="min-w-0">
-                <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none mb-1">{userRole.toLowerCase()}</p>
-                <button 
-                  onClick={onLogout} 
-                  className="text-xs text-rose-400 font-bold flex items-center gap-1 mt-0.5 hover:text-rose-300 transition-colors focus:ring-1 focus:ring-rose-500 outline-none rounded"
-                >
-                  <LogOut size={12} /> Sign Out
-                </button>
+              <div className="min-w-0 flex-1">
+                <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none mb-1 group-hover:text-indigo-400 transition-colors">{userRole.toLowerCase()}</p>
+                <p className="text-xs font-bold text-white truncate">View Profile</p>
               </div>
             )}
           </div>
+          <button 
+            onClick={onLogout} 
+            className={`w-full mt-3 p-3 text-xs text-rose-400 font-bold flex items-center ${!isSidebarOpen ? 'justify-center' : 'gap-2 px-4'} hover:text-rose-300 transition-colors focus:ring-1 focus:ring-rose-500 outline-none rounded-xl bg-rose-500/5`}
+          >
+            <LogOut size={14} /> {isSidebarOpen && "Sign Out"}
+          </button>
         </div>
       </aside>
 
@@ -160,18 +173,19 @@ const Layout: React.FC<LayoutProps> = ({ children, userRole, onLogout }) => {
           <NavigationLinks isMobile={true} />
 
           <div className="p-6 mt-auto border-t border-slate-800">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 cursor-pointer" onClick={() => { navigate('/profile'); setMobileMenuOpen(false); }}>
               <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${userRole}`} alt="" className="w-12 h-12 rounded-xl border-2 border-slate-700" />
               <div className="flex-1">
                 <p className="text-sm font-black text-white">{userRole}</p>
-                <button 
-                  onClick={() => { setMobileMenuOpen(false); onLogout(); }} 
-                  className="text-xs text-rose-400 font-bold flex items-center gap-1 mt-1 active:scale-95"
-                >
-                  <LogOut size={14} /> Sign Out
-                </button>
+                <p className="text-xs text-slate-400 font-bold">View Profile</p>
               </div>
             </div>
+            <button 
+              onClick={() => { setMobileMenuOpen(false); onLogout(); }} 
+              className="w-full mt-4 py-3 bg-rose-500/10 text-rose-400 rounded-xl font-bold flex items-center justify-center gap-2"
+            >
+              <LogOut size={14} /> Sign Out
+            </button>
           </div>
         </aside>
       </div>

@@ -1,24 +1,54 @@
 
-import { Student, PBLProject, Task, Resource, FeedItem } from './types';
+import { Student, PBLProject, Task, Resource, FeedItem, UserRole } from './types';
 
 export const MOCK_STUDENTS: Student[] = [
   {
     id: '1',
     name: 'Alex Johnson',
+    role: UserRole.STUDENT,
     engagementIndex: 85,
     masteryScores: [
       { subject: 'Mathematics', score: 72, previousScore: 65, gapAreas: ['Calculus', 'Trigonometry'] },
       { subject: 'Physics', score: 88, previousScore: 82, gapAreas: ['Thermodynamics'] }
-    ]
+    ],
+    skills: ['Data Analysis', 'Python', 'Calculus'],
+    personalityType: 'Analytical Architect'
   },
   {
     id: '2',
     name: 'Maria Garcia',
+    role: UserRole.STUDENT,
     engagementIndex: 62,
     masteryScores: [
       { subject: 'Mathematics', score: 91, previousScore: 89, gapAreas: [] },
       { subject: 'Physics', score: 45, previousScore: 50, gapAreas: ['Quantum Mechanics', 'Wave Optics'] }
-    ]
+    ],
+    skills: ['Design Thinking', 'Public Speaking', 'Visual Arts'],
+    personalityType: 'Creative Visionary'
+  },
+  {
+    id: '3',
+    name: 'Liam Chen',
+    role: UserRole.STUDENT,
+    engagementIndex: 78,
+    masteryScores: [
+      { subject: 'Mathematics', score: 85, previousScore: 80, gapAreas: ['Statistics'] },
+      { subject: 'Physics', score: 70, previousScore: 68, gapAreas: ['Kinematics'] }
+    ],
+    skills: ['Project Management', 'Logic', 'Research'],
+    personalityType: 'Strategic Diplomat'
+  },
+  {
+    id: '4',
+    name: 'Sophie Van',
+    role: UserRole.STUDENT,
+    engagementIndex: 92,
+    masteryScores: [
+      { subject: 'Mathematics', score: 60, previousScore: 55, gapAreas: ['Algebra'] },
+      { subject: 'Physics', score: 95, previousScore: 92, gapAreas: [] }
+    ],
+    skills: ['Engineering', 'Prototyping', 'Physics'],
+    personalityType: 'Hands-on Innovator'
   }
 ];
 

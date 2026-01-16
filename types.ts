@@ -1,3 +1,4 @@
+
 export enum UserRole {
   TEACHER = 'TEACHER',
   STUDENT = 'STUDENT'
@@ -7,7 +8,16 @@ export interface User {
   id: string;
   name: string;
   role: UserRole;
-  avatar?: string;
+  avatarUrl?: string;
+  xp?: number;
+  notifications?: NotificationSettings;
+}
+
+export interface NotificationSettings {
+  tasks: boolean;
+  pbl: boolean;
+  community: boolean;
+  quietHours: boolean;
 }
 
 export interface MasteryScore {
@@ -17,11 +27,11 @@ export interface MasteryScore {
   gapAreas: string[];
 }
 
-export interface Student {
-  id: string;
-  name: string;
+export interface Student extends User {
   engagementIndex: number;
   masteryScores: MasteryScore[];
+  skills: string[];
+  personalityType: string;
 }
 
 export interface PBLProject {
